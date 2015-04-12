@@ -1,3 +1,23 @@
+var app = require('http').createServer(handler)
+var io = require('socket.io')(app);
+var fs = require('fs');
+
+app.listen(3000);
+
+//serving the index file 
+function handler(req, res) {
+    fs.readFile(__dirname + '/index.html',
+        function(err, data) {
+            if (err) {
+                res.writeHead(500);
+                return res.end('Error loading index.html');
+            }
+
+            res.writeHead(200);
+            res.end(data);
+        });
+}
+
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort, // make a local instance of it
     // get port name from the command line:
@@ -18,6 +38,14 @@ myPort.open(function(error) {
     }
 });
 
-myPort.on("data", function (data) {
-  console.log(data);
+io.on('connection', function(socket) {
+    socket.on('ready', function(name, fn) {
+        fn(dataIn);
+    });
+});
+
+var dataIn = '';
+
+myPort.on("data", function(data) {
+    dataIn = data.toString();
 });

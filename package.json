@@ -4,7 +4,8 @@
   "description": "https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-communication-with-node-js/",
   "main": "index.js",
   "dependencies": {
-    "serialport": "^1.6.3"
+    "serialport": "^1.6.3",
+    "socket.io": "*"
   },
   "devDependencies": {},
   "scripts": {
