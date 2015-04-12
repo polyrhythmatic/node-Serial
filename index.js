@@ -36,19 +36,29 @@ myPort.open(function(error) {
     } else {
         console.log('open');
     }
-});
 
-io.on('connection', function(socket) {
-    socket.on('ready', function(name, fn) {
-        console.log('name is ', name);
-        console.log('function is ', fn);
-        fn(dataIn);
+    io.on('connection', function(socket) {
+        socket.on('ready', function(data) {
+            console.log('node socket received:',data);
+            myPort.write("into the serial port\n", function(err, results){
+                if (err) { console.log('error writing to serial:',err); }
+                console.log('serial results',results);
+            });
+        });
+
+        socket.on('dataFromBrowser', function(data){
+            console.log('got data from browser:',data);
+            myPort.write(data.message, function(err){
+                if (err) { console.log('err from serial:',err);}
+            });
+        });
+
+        myPort.on("data", function(data) {
+            var dataIn = data.toString();
+            socket.emit('serialPortData', {data: dataIn});
+            //console.log(data);
+        });
+
     });
 });
 
-var dataIn = '';
-
-myPort.on("data", function(data) {
-    dataIn = data.toString();
-    //console.log(data);
-});
