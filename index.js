@@ -40,6 +40,8 @@ myPort.open(function(error) {
 
 io.on('connection', function(socket) {
     socket.on('ready', function(name, fn) {
+        console.log('name is ', name);
+        console.log('function is ', fn);
         fn(dataIn);
     });
 });
@@ -48,4 +50,5 @@ var dataIn = '';
 
 myPort.on("data", function(data) {
     dataIn = data.toString();
+    //console.log(data);
 });
