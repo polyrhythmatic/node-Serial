@@ -1,14 +1,27 @@
-<script src="/socket.io/socket.io.js"></script>
-<script>
-var socket = io('http://localhost:3000'); // TIP: io() with no args does auto-discovery
+<!DOCTYPE html>
+<html>
 
-var latestData;
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="index.js"></script>
+</head>
 
-socket.on('connect', function() { // TIP: you can avoid listening on `connect` and listen on events directly too!
-    socket.emit('ready', {data: 'browser is ready'});
-    socket.on('serialPortData', function(data){
-    	latestData = data;
-    	console.log('got data from the serial port via node:',data);
+<body>
+    <script>
+    var socket = io('http://localhost:3000'); // TIP: io() with no args does auto-discovery
+
+    var latestData;
+
+    socket.on('connect', function() { // TIP: you can avoid listening on `connect` and listen on events directly too!
+        socket.emit('ready', {
+            data: 'browser is ready'
+        });
+        socket.on('serialPortData', function(data) {
+            latestData = data;
+            console.log('got data from the serial port via node:', data);
+        });
     });
-});
-</script>
+    </script>
+</body>
+
+</html>

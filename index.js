@@ -21,7 +21,7 @@ function handler(req, res) {
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort, // make a local instance of it
     // get port name from the command line:
-    portName = process.argv[2];
+    portName = '/dev/cu.usbmodem1411';//process.argv[2]; removing command line invocation of port
 
 var myPort = new SerialPort(portName, {
     baudRate: 9600,
