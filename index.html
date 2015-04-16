@@ -2,26 +2,59 @@
 <html>
 
 <head>
-    <script src="/socket.io/socket.io.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" media="all" href="style.css"></link>
+    <title>Node Serial</title>
+    <script src="./js/jquery-2.1.3.min.js"></script>
     <script src="index.js"></script>
 </head>
 
 <body>
-    <script>
-    var socket = io('http://localhost:3000'); // TIP: io() with no args does auto-discovery
-
-    var latestData;
-
-    socket.on('connect', function() { // TIP: you can avoid listening on `connect` and listen on events directly too!
-        socket.emit('ready', {
-            data: 'browser is ready'
-        });
-        socket.on('serialPortData', function(data) {
-            latestData = data;
-            console.log('got data from the serial port via node:', data);
-        });
-    });
-    </script>
+    <div id="test"></div>
+    <div>
+        <button type="button">Run</button>
+        <button type="button">Stop</button>
+    </div>
+    <div>
+        <br>
+        <form>
+            <p>
+                <label for="serialDropdown">Available Serial Ports: </label>
+                <select id="serialDropdown" name="selectedSerial">
+                    <option value="/dev/tty.BlueTooth-Incoming-Port">/dev/tty.BlueTooth-Incoming-Port</option>
+                    <option value="/dev/tty.usbmodem262471">/dev/tty.usbmodem262471</option>
+                </select>
+            </p>
+        </form>
+        <div>
+            <form>
+                IP Send:
+                <input type="text" name="ipSend"> Port:
+                <input type="text" name="portSend" value="5000">
+                <button type="button">Set IP Send</button>
+            </form>
+        </div>
+        <br> IP Receive:
+        <input type="text" name="ipRecieve" value="192.161.100.1"> Port:
+        <input type="text" name="portReceive" value="5001">
+        <br>
+        <br>
+        <button type="button">Test OSC Send</button>
+        <br>
+        <br>
+        <div id="messageArea">
+            <p id="messageLabel">Serial Preview:</p>
+            <pre id="message">
+{
+    "address": "/",
+    "args": [
+        95
+    ]
+}
+        </pre>
+        </div>
+        <footer>
+        </footer>
 </body>
 
 </html>

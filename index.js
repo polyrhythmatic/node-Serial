@@ -19,9 +19,19 @@ function handler(req, res) {
 }
 
 var serialport = require('serialport'), // include the library
-    SerialPort = serialport.SerialPort, // make a local instance of it
-    // get port name from the command line:
-    portName = '/dev/cu.usbmodem1411';//process.argv[2]; removing command line invocation of port
+    SerialPort = serialport.SerialPort; // make a local instance of it
+
+serialport.list(function(err, ports) { // listing out serial ports. Need to populate HTML dropdown form with this
+    ports.forEach(function(port) {
+        $(document).ready(function(){
+
+            $("#test").html("Hello World");
+            console.log(port.comName);
+        })
+    });
+});
+
+var portName = '/dev/cu.usbmodem1411'; //process.argv[2]; removing command line invocation of port
 
 var myPort = new SerialPort(portName, {
     baudRate: 9600,
@@ -39,26 +49,31 @@ myPort.open(function(error) {
 
     io.on('connection', function(socket) {
         socket.on('ready', function(data) {
-            console.log('node socket received:',data);
-            myPort.write("into the serial port\n", function(err, results){
-                if (err) { console.log('error writing to serial:',err); }
-                console.log('serial results',results);
+            console.log('node socket received:', data);
+            myPort.write("into the serial port\n", function(err, results) {
+                if (err) {
+                    console.log('error writing to serial:', err);
+                }
+                console.log('serial results', results);
             });
         });
 
-        socket.on('dataFromBrowser', function(data){
-            console.log('got data from browser:',data);
-            myPort.write(data.message, function(err){
-                if (err) { console.log('err from serial:',err);}
+        socket.on('dataFromBrowser', function(data) {
+            console.log('got data from browser:', data);
+            myPort.write(data.message, function(err) {
+                if (err) {
+                    console.log('err from serial:', err);
+                }
             });
         });
 
         myPort.on("data", function(data) {
             var dataIn = data.toString();
-            socket.emit('serialPortData', {data: dataIn});
+            socket.emit('serialPortData', {
+                data: dataIn
+            });
             //console.log(data);
         });
 
     });
 });
-

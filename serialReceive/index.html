@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <script>
+    var socket = io('http://localhost:3000'); // TIP: io() with no args does auto-discovery
+
+    var latestData;
+
+    socket.on('connect', function() { // TIP: you can avoid listening on `connect` and listen on events directly too!
+        socket.emit('ready', {
+            data: 'browser is ready'
+        });
+        socket.on('serialPortData', function(data) {
+            latestData = data;
+            console.log('got data from the serial port via node:', data);
+        });
+    });
+    </script>
+</body>
+
+</html>
