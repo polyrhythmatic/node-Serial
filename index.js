@@ -21,24 +21,32 @@ function handler(req, res) {
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort; // make a local instance of it
 
-serialport.list(function(err, ports) { // listing out serial ports. Need to populate HTML dropdown form with this
-    ports.forEach(function(port) {
-        $(document).ready(function(){
-
-            $("#test").html("Hello World");
-            console.log(port.comName);
-        })
-    });
+serialport.list(function(err, ports) { // listing out serial ports and populates list
+    $(document).ready(function() {
+        var serialHtml = "<option value=\"blank\">Select a port</option>";
+        ports.forEach(function(port) {
+            $("#serialDropdown").append("<option value=\"" + port.comName + "\">" + port.comName + "</option>");
+        });
+    })
 });
 
-var portName = '/dev/cu.usbmodem1411'; //process.argv[2]; removing command line invocation of port
+$(function() {
+    //populating the baud rate dropdown
+    var baudArray = [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200];
+    for (i in baudArray) $("#baudDropdown").append("<option value=\"" + baudArray[i] + "\">" + baudArray[i] + "</option>");
+});
+//tried moving serial and baud rate variable definitions into functions but now having scope issues
+var setSerialPort = function() {
+        var portName = serialDropdown.options[serialDropdown.selectedIndex].value; //sets portname to selected dropdown value
+}
 
-var myPort = new SerialPort(portName, {
-    baudRate: 9600,
-    // look for return and newline at the end of each data packet:
-    parser: serialport.parsers.readline("\r\n")
-}, false);
-
+var setBaudRate = function() {
+    var myPort = new SerialPort(portName, {
+        baudRate: baudDropdown.options[baudDropdown.selectedIndex].value,
+        // look for return and newline at the end of each data packet:
+        parser: serialport.parsers.readline("\r\n")
+    }, false);
+}
 
 myPort.open(function(error) {
     if (error) {
