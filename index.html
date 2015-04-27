@@ -11,19 +11,19 @@
 
 <body>
     <div>
-        <button type="button">Run</button>
+        <button onclick="startFunction()" type="button">Start</button>
         <button type="button">Stop</button>
     </div>
     <div>
         <br>
         <form>
-        <label for="serialDropdown">Serial Ports: </label>
-        <select onchange="setSerialPort()" id="serialDropdown" name="selectedSerial">
-        </select>
-        <label for="baudDropdown">Baud Rate: </label>
-        <select onchange="setBaudRate()" id="baudDropdown" name="selectedBaud">
-        </select>
-        </p>
+            <label for="serialDropdown">Serial Ports: </label>
+            <select id="serialDropdown" name="selectedSerial">
+            </select>
+            <label for="baudDropdown">Baud Rate: </label>
+            <select id="baudDropdown" name="selectedBaud">
+            </select>
+            </p>
         </form>
     </div>
     <form>
