@@ -26,30 +26,10 @@
             </p>
         </form>
     </div>
-    <form>
-        IP Send:
-        <input type="text" name="ipSend"> Port:
-        <input type="text" name="portSend" value="5000">
-        <button type="button">Set IP Send</button>
-    </form>
-    <br> IP Receive:
-    <input type="text" name="ipRecieve" value="192.161.100.1"> Port:
-    <input type="text" name="portReceive" value="5001">
-    <br>
-    <br>
-    <button type="button">Test OSC Send</button>
-    <br>
-    <br>
     <div id="messageArea">
         <p id="messageLabel">Serial Preview:</p>
-        <pre id="message">
-{
-    "address": "/",
-    "args": [
-        95
-    ]
-}
-        </pre>
+        <div id="message" div style="border : solid 2px ##d3d3d3; background : #000000; color : #ffffff; padding : 4px; width : 300px; height : 400px; overflow : auto; ">
+        </div>
     </div>
     <footer>
     </footer>

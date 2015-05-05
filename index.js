@@ -2,18 +2,16 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var path = require('path'); //added this but not using it yet - try implementing instead of __dirname
+var execPath = path.dirname(process.execPath);
 
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort; // make a local instance of it
 
-app.listen(3000, function(){
-    console.log('started app on 3000');
-});
 
 //serving the index file 
 function handler(req, res) {
-    console.log('got req for ',req);
-    fs.readFile(__dirname + '/index.html',//this __dirname is a problem, try implementing 'path' 
+    console.log('got req for ', req);
+    fs.readFile('/Users/sethkranzler/Development/node-Serial/serialReceive/index.html', //this __dirname is a problem, try implementing 'path' 
         //perhaps process.env.pwd or execpath = path.dirname(process.execpath);
         function(err, data) {
             if (err) {
@@ -42,6 +40,10 @@ serialport.list(function(err, ports) { // listing out serial ports and populates
 });
 
 var startFunction = function() {
+    app.listen(3000, function() {
+        console.log('started app on 3000');
+    });
+
     var portName = $("#serialDropdown").val();
 
     var myPort = new SerialPort(portName, {
@@ -69,19 +71,21 @@ var startFunction = function() {
             });
 
             socket.on('dataFromBrowser', function(data) {
-                console.log('got data from browser:', data);
+                console.log('got data from browser:', data.data);
                 myPort.write(data.message, function(err) {
                     if (err) {
                         console.log('err from serial:', err);
                     }
                 });
             });
-
+            //on receiving serial, sends it 
             myPort.on("data", function(data) {
                 var dataIn = data.toString();
                 socket.emit('serialPortData', {
                     data: dataIn
                 });
+                $("#message").append(dataIn + "<br>");
+                $("#message").scrollTop($("#message")[0].scrollHeight);
                 //console.log(data);
             });
 
