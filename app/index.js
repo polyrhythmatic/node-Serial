@@ -7,6 +7,9 @@ var execPath = path.dirname(process.execPath);
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort; // make a local instance of it
 
+var midi = require('midi');
+var midiIn = new midi.input();
+
 //file navigator
 var fileUrl = '';
 
@@ -51,9 +54,15 @@ serialport.list(function(err, ports) { // listing out serial ports and populates
     })
 });
 
-var startFunction = function() {
-    app.listen(3000, function() {
-        console.log('started app on 3000');
+//sets port number
+$("#portNumber").change(function() {
+    var port = $("#portNumber").val();
+    console.log(port);
+});
+
+var startSerial = function() {
+    app.listen(port, function() {
+        console.log('started app on ' + port);
     });
 
     var portName = $("#serialDropdown").val();
@@ -101,6 +110,29 @@ var startFunction = function() {
                 //console.log(data);
             });
 
+        });
+    });
+}
+
+//populate the midi dropdown
+for (var i = 0, max = midiIn.getPortCount(); i < max; i++) {
+    $("#midiInputDropdown").append("<option value=\"" + i + "\">" + midiIn.getPortName(i) + "</option>");
+}
+
+var startMidi = function() {
+    app.listen(port, function() {
+        console.log('started app on ' + port);
+    });
+    var midiPort = parseInt($("#midiInputDropdown").val());
+    midiIn.openPort(midiPort);
+    midiIn.on('message', function(deltaTime, message) {
+        console.log('m:' + message + ' d:' + deltaTime);
+        io.on('connection', function(socket) {
+            console.log('socket connected midi');
+            socket.emit('midi', {
+                message: message,
+                deltaTime: deltaTime
+            });
         });
     });
 }
