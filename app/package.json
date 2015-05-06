@@ -1,0 +1,27 @@
+{
+  "main": "index.html",
+  "dependencies": {
+    "serialport": "^1.6.3",
+    "socket.io": "^1.3.5"
+  },
+  "name": "serialNode",
+  "description": "demo app of node-webkit",
+  "version": "0.0.1",
+  "keywords": [],
+  "window": {
+    "title": "Node Serial",
+    "icon": "",
+    "toolbar": false,
+    "frame": false,
+    "width": 800,
+    "height": 500,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200,
+    "max_width": 800,
+    "max_height": 600
+  },
+  "webkit": {
+    "plugin": true
+  }
+}

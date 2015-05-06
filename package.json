@@ -1,16 +1,10 @@
 {
-  "name": "nodeSerialExample",
-  "version": "1.0.0",
-  "description": "https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-communication-with-node-js/",
-  "main": "index.html",
-  "dependencies": {
-    "serialport": "^1.6.3",
-    "socket.io": "*"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "MIT"
+  "name": "nodeSerial",
+  "description": "Easy serial socket communication",
+  "author": "Seth Kranzler",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-node-webkit-builder": "~0.1.21",
+    "node-webkit-builder": "^1.0.11"
+  }
 }

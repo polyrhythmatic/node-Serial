@@ -7,12 +7,24 @@ var execPath = path.dirname(process.execPath);
 var serialport = require('serialport'), // include the library
     SerialPort = serialport.SerialPort; // make a local instance of it
 
+//file navigator
+var fileUrl = '';
+
+function chooseFile(name) {
+    var chooser = $(name);
+    chooser.change(function(evt) {
+        console.log($(this).val());
+        fileUrl = $(this).val();
+    });
+
+    chooser.trigger('click');
+}
+chooseFile('#fileDialog');
 
 //serving the index file 
 function handler(req, res) {
     console.log('got req for ', req);
-    fs.readFile('/Users/sethkranzler/Development/node-Serial/serialReceive/index.html', //this __dirname is a problem, try implementing 'path' 
-        //perhaps process.env.pwd or execpath = path.dirname(process.execpath);
+    fs.readFile(fileUrl,
         function(err, data) {
             if (err) {
                 res.writeHead(500);
