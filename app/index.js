@@ -24,6 +24,12 @@ function chooseFile(name) {
 }
 chooseFile('#fileDialog');
 
+//sets port number
+var port = 3000;
+$("#portNumber").change(function() {
+    port = $("#portNumber").val();
+    console.log(port);
+});
 //serving the index file 
 function handler(req, res) {
     console.log('got req for ', req);
@@ -54,12 +60,6 @@ serialport.list(function(err, ports) { // listing out serial ports and populates
     })
 });
 
-//sets port number
-$("#portNumber").change(function() {
-    var port = $("#portNumber").val();
-    console.log(port);
-});
-
 var startSerial = function() {
     app.listen(port, function() {
         console.log('started app on ' + port);
@@ -72,15 +72,18 @@ var startSerial = function() {
         parser: serialport.parsers.readline("\r\n"),
     }, false);
 
+    io.on('connection', function(socket) {
 
-    myPort.open(function(error) {
-        if (error) {
-            console.log('failed to open: ' + error);
-        } else {
-            console.log('open');
-        }
+        myPort.open(function(error) {
+            if (error) {
+                console.log('failed to open: ' + error);
+            } else {
+                console.log('open');
+            }
+            myPort.flush(function() {
+                console.log('flushed');
+            });
 
-        io.on('connection', function(socket) {
             socket.on('ready', function(data) {
                 console.log('node socket received:', data);
                 myPort.write("into the serial port\n", function(err, results) {
@@ -100,16 +103,27 @@ var startSerial = function() {
                 });
             });
             //on receiving serial, sends it 
-            myPort.on("data", function(data) {
-                var dataIn = data.toString();
-                socket.emit('serialPortData', {
-                    data: dataIn
-                });
-                $("#message").append(dataIn + "<br>");
-                $("#message").scrollTop($("#message")[0].scrollHeight);
-                //console.log(data);
-            });
 
+        });
+        myPort.on("data", function(data) {
+            var dataIn = data.toString();
+            socket.emit('serialPortData', {
+                data: dataIn
+            });
+            // $("#message").append(dataIn + "<br>");
+            // $("#message").scrollTop($("#message")[0].scrollHeight);
+            //console.log(data);
+        });
+
+        var midiPort = parseInt($("#midiInputDropdown").val());
+        midiIn.openPort(midiPort);
+        midiIn.on('message', function(deltaTime, message) {
+            console.log('m:' + message + ' d:' + deltaTime);
+            console.log('socket connected midi');
+            socket.emit('midi', {
+                message: message,
+                deltaTime: deltaTime
+            });
         });
     });
 }
